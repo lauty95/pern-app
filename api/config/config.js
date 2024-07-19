@@ -1,4 +1,4 @@
-require('dotenv').config(); // Carga las variables de entorno desde .env
+require('dotenv').config();
 
 module.exports = {
   host: process.env.DB_HOST || "localhost",

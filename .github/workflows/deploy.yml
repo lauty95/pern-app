@@ -29,8 +29,8 @@ jobs:
 
       - name: Build and push production Docker image
         run: |
-          export DOCKERFILE_API=api/Docker/production/Dockerfile
-          export DOCKERFILE_CLIENT=client/Docker/production/Dockerfile
+          export DOCKERFILE_API=Docker/production/Dockerfile
+          export DOCKERFILE_CLIENT=Docker/production/Dockerfile
           export NODE_ENV=production
           docker-compose build
           docker tag myapp ghcr.io/${{ github.repository }}:latest

@@ -49,22 +49,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.TOKEN_CD }}
+      # - name: Log in to GitHub Container Registry
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.TOKEN_CD }}
 
       - name: Pull production images and deploy
         run: |
           mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY"
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }} "
+            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.TOKEN_CD }}
             docker pull ghcr.io/${{ github.repository }}:api-latest
             docker pull ghcr.io/${{ github.repository }}:client-latest
             docker compose up

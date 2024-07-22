@@ -9,12 +9,11 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: Dockerfile
-      target: development
+      dockerfile: ${DOCKERFILE_API}
     ports:
       - '3001:3001'
     environment:
-      NODE_ENV: development
+      NODE_ENV: ${NODE_ENV}
       DB_HOST: db
       DB_DBNAME: todo_db
       DB_USERNAME: postgres
@@ -25,12 +24,11 @@ services:
   client:
     build:
       context: ./client
-      dockerfile: Dockerfile
-      target: development
+      dockerfile: ${DOCKERFILE_CLIENT}
     ports:
       - '5173:5173'
     environment:
-      NODE_ENV: development
+      NODE_ENV: ${NODE_ENV}
     depends_on:
       - api
 

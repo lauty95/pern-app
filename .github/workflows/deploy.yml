@@ -58,12 +58,15 @@ jobs:
 
       - name: Pull production images and deploy
         run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.USER }} "
-            docker pull ghcr.io/${{ github.repository }}:latest
-            docker pull ghcr.io/${{ github.repository }}:latest
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-add ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER }} "
+            docker pull ghcr.io/${{ github.repository }}:api-latest
+            docker pull ghcr.io/${{ github.repository }}:client-latest
             docker compose up
           "
-            # docker-compose -f /path/to/docker-compose.yml up -d
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}

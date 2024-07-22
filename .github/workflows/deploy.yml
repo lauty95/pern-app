@@ -58,7 +58,8 @@ jobs:
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.TOKEN_CD }}
             docker pull ghcr.io/${{ github.repository }}:api_latest
             docker pull ghcr.io/${{ github.repository }}:client_latest
-            docker compose up
+            docker run -d --name api -p 3001:3001 ghcr.io/${{ github.repository }}:api_latest
+            docker run -d --name client -p 5173:5173 ghcr.io/${{ github.repository }}:client_latest
           "
 
         env:

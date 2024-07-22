@@ -10,6 +10,7 @@ services:
     build:
       context: ./api
       dockerfile: ${DOCKERFILE_API}
+    image: pern_app:api_latest
     ports:
       - '3001:3001'
     environment:
@@ -25,6 +26,7 @@ services:
     build:
       context: ./client
       dockerfile: ${DOCKERFILE_CLIENT}
+    image: pern_app:client_latest
     ports:
       - '5173:5173'
     environment:

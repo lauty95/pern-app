@@ -10,10 +10,12 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = async (req, res) => {
+    console.log("Entro")
     try {
         const tasks = await Task.findAll();
         res.json(tasks);
     } catch (error) {
+        console.log(error)
         res.status(500).json({ error: error.message });
     }
 };

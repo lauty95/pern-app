@@ -1,0 +1,49 @@
+# # Fase de desarrollo
+# FROM node:22-alpine AS development
+# WORKDIR /app
+
+# # Copia los archivos package.json para ambas aplicaciones
+# COPY api/package*.json ./api/
+# COPY client/package*.json ./client/
+
+# # Instala dependencias para ambas aplicaciones
+# RUN cd /app/api && npm install
+# RUN cd /app/client && npm install
+
+# # Copia el resto de los archivos del proyecto
+# COPY . .
+
+# # Expone los puertos necesarios
+# EXPOSE 3001 5173
+
+# # Comando para ejecutar ambas aplicaciones en desarrollo
+# #CMD ["sh", "-c", "cd /app/api && npm start & cd /app/client && npm run dev"]
+# CMD ["cd", "api/node_modules", "&&", "ls"]
+
+# # Fase de producción
+# FROM node:22-slim AS production
+# WORKDIR /app
+
+# # Copia los archivos package.json para ambas aplicaciones
+# COPY api/package*.json ./api/
+# COPY client/package*.json ./client/
+
+# # Instala dependencias para ambas aplicaciones (para producción se pueden necesitar menos paquetes)
+# RUN cd /app/api && npm install --only=production
+# RUN cd /app/client && npm install --only=production
+
+# # Copia el resto de los archivos del proyecto
+# COPY . .
+
+# # Construye el frontend
+# RUN cd /app/client && npm run build
+
+# # Copia la construcción del frontend
+# COPY --from=development /app/client/dist /app/client/public
+
+# # Configura el entorno de producción
+# WORKDIR /app/api
+# EXPOSE 3001
+
+# # Comando para ejecutar solo el backend en producción
+# CMD ["npm", "start"]

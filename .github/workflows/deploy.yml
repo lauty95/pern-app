@@ -33,10 +33,13 @@ jobs:
           export DOCKERFILE_CLIENT=Docker/production/Dockerfile
           export NODE_ENV=production
           docker-compose build
-          docker tag pern_app_api ghcr.io/${{ github.repository }}:api-latest
-          docker tag pern_app_client ghcr.io/${{ github.repository }}:client-latest
-          docker push ghcr.io/${{ github.repository }}:api-latest
-          docker push ghcr.io/${{ github.repository }}:client-latest
+          echo "--------"
+          echo ${{ github.repository }}
+          echo "--------"
+          docker tag pern_app_api ghcr.io/${{ github.repository }}:latest
+          docker tag pern_app_client ghcr.io/${{ github.repository }}:latest
+          docker push ghcr.io/${{ github.repository }}:latest
+          docker push ghcr.io/${{ github.repository }}:latest
 
   deploy:
     needs: build
@@ -56,8 +59,8 @@ jobs:
       - name: Pull production images and deploy
         run: |
           ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.USER }}@${{ secrets.HOST }} "
-            docker pull ghcr.io/${{ github.repository }}:api-latest
-            docker pull ghcr.io/${{ github.repository }}:client-latest
+            docker pull ghcr.io/${{ github.repository }}:latest
+            docker pull ghcr.io/${{ github.repository }}:latest
             docker-compose -f /path/to/docker-compose.yml up -d
           "
         env:

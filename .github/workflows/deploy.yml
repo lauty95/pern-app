@@ -54,12 +54,15 @@ jobs:
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }} "
-            pwd
+            cd /u
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.TOKEN_CD }}
             docker pull ghcr.io/${{ github.repository }}:latest
             docker pull ghcr.io/${{ github.repository }}:latest
+            echo "pwd"
             pwd
+            echo "ls"
             ls
+            echo "----"
             docker compose up
           "
 

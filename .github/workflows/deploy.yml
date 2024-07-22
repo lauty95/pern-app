@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD
 
 on:
   push:
@@ -10,68 +10,51 @@ on:
       - main
 
 jobs:
-  build:
+  create-docker-image:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:13
-        env:
-          POSTGRES_USER: db_user
-          POSTGRES_PASSWORD: db_password
-          POSTGRES_DB: todo_db
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'
-
-      - name: Install dependencies and build (Development)
-        run: |
-          docker build --target development -t myapp:dev .
-
-      - name: Install dependencies and build (Production)
-        run: |
-          docker build --target production -t myapp:prod .
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.TOKEN_CD }}
 
-      - name: Push development image to GitHub Container Registry
+      - name: Build and push production Docker image
         run: |
-          docker tag myapp:dev ghcr.io/${{ github.repository }}:dev
-          docker push ghcr.io/${{ github.repository }}:dev
-
-      - name: Push production image to GitHub Container Registry
-        run: |
-          docker tag myapp:prod ghcr.io/${{ github.repository }}:prod
-          docker push ghcr.io/${{ github.repository }}:prod
+          docker compose build --target production
+          docker tag pern_app ghcr.io/${{ github.repository }}:latest
+          docker push ghcr.io/${{ github.repository }}:latest
 
   deploy:
-    needs: build
+    needs: create-docker-image
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Deploy to server
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN_CD }}
+
+      - name: Pull production image and deploy
         run: |
-          ssh user@your-server "docker pull ghcr.io/${{ github.repository }}:prod && docker run -d -p 3001:3001 --name myapp ghcr.io/${{ github.repository }}:prod"
+          ssh ${{ secrets.USER }} "
+            docker pull ghcr.io/${{ github.repository }}:latest
+            docker-compose -f /path/to/docker-compose.yml up -d
+          "
+          ls
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}

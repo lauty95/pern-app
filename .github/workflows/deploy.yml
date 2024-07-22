@@ -29,8 +29,8 @@ jobs:
 
       - name: Build and push production Docker images
         run: |
-          export DOCKERFILE_API=api.production.Dockerfile
-          export DOCKERFILE_CLIENT=client.production.Dockerfile
+          export DOCKERFILE_API=Docker/production/Dockerfile
+          export DOCKERFILE_CLIENT=Docker/production/Dockerfile
           export NODE_ENV=production
           docker-compose build
           docker tag pern_app_api ghcr.io/${{ github.repository }}:api-latest
@@ -63,6 +63,6 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
-          DOCKERFILE_API: production.Dockerfile
-          DOCKERFILE_CLIENT: production.Dockerfile
+          DOCKERFILE_API: Docker.production.Dockerfile
+          DOCKERFILE_CLIENT: Docker.production.Dockerfile
           NODE_ENV: production

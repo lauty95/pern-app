@@ -32,11 +32,12 @@ jobs:
           export DOCKERFILE_API=Docker/production/Dockerfile
           export DOCKERFILE_CLIENT=Docker/production/Dockerfile
           export NODE_ENV=production
-          docker-compose build
-          docker tag pern_app ghcr.io/${{ github.repository }}:api_latest
+          docker-compose -f docker-compose.production.yml build
+          docker tag pern_app_api ghcr.io/${{ github.repository }}:api_latest
           docker push ghcr.io/${{ github.repository }}:api_latest
-          docker tag pern_app ghcr.io/${{ github.repository }}:client_latest
+          docker tag pern_app_client ghcr.io/${{ github.repository }}:client_latest
           docker push ghcr.io/${{ github.repository }}:client_latest
+
 
   deploy:
     needs: build
@@ -57,8 +58,8 @@ jobs:
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.TOKEN_CD }}
             docker pull ghcr.io/${{ github.repository }}:api_latest
             docker pull ghcr.io/${{ github.repository }}:client_latest
-            docker run -d --name api -p 3001:3001 ghcr.io/${{ github.repository }}:api_latest
-            docker run -d --name client -p 5173:5173 ghcr.io/${{ github.repository }}:client_latest
+            cd /path/to/your/docker-compose/directory
+            docker-compose up -d
           "
 
         env:

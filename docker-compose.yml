@@ -7,14 +7,14 @@ services:
       - db-data:/var/lib/postgresql/data
 
   api:
+    image: ${API_IMAGE:-pern_app:api_latest}
     build:
       context: ./api
-      dockerfile: ${DOCKERFILE_API}
-    image: pern_app:api_latest
+      dockerfile: ${DOCKERFILE_API:-Docker/production/Dockerfile}
     ports:
       - '3001:3001'
     environment:
-      NODE_ENV: ${NODE_ENV}
+      NODE_ENV: ${NODE_ENV:-development}
       DB_HOST: db
       DB_DBNAME: todo_db
       DB_USERNAME: postgres
@@ -23,14 +23,14 @@ services:
       - db
 
   client:
+    image: ${CLIENT_IMAGE:-pern_app:client_latest}
     build:
       context: ./client
-      dockerfile: ${DOCKERFILE_CLIENT}
-    image: pern_app:client_latest
+      dockerfile: ${DOCKERFILE_CLIENT:-Docker/production/Dockerfile}
     ports:
       - '5173:5173'
     environment:
-      NODE_ENV: ${NODE_ENV}
+      NODE_ENV: ${NODE_ENV:-development}
     depends_on:
       - api
 

@@ -47,6 +47,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Copy docker-compose.yml to server
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+          scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.USER }}:/u
+
       - name: Pull production images and deploy
         run: |
           mkdir -p ~/.ssh
@@ -58,7 +67,7 @@ jobs:
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.TOKEN_CD }}
             docker pull ghcr.io/${{ github.repository }}:api_latest
             docker pull ghcr.io/${{ github.repository }}:client_latest
-            cd /path/to/your/docker-compose/directory
+            cd /u
             docker-compose up -d
           "
 
@@ -67,4 +76,6 @@ jobs:
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
           DOCKERFILE_API: Docker.production.Dockerfile
           DOCKERFILE_CLIENT: Docker.production.Dockerfile
+          IMAGE_API: ghcr.io/${{ github.repository }}:api_latest
+          IMAGE_CLIENT: ghcr.io/${{ github.repository }}:client_latest
           NODE_ENV: production

@@ -32,7 +32,8 @@ jobs:
           export DOCKERFILE_API=Docker/production/Dockerfile
           export DOCKERFILE_CLIENT=Docker/production/Dockerfile
           export NODE_ENV=production
-          export API_IMAGE=asdddd
+          export API_IMAGE=docker.io/library/pern_app:api_latest
+          export CLIENT_IMAGE=docker.io/library/pern_app:client_latest
           docker-compose build
           docker tag pern_app:api_latest ghcr.io/${{ github.repository }}:api_latest
           docker push ghcr.io/${{ github.repository }}:api_latest

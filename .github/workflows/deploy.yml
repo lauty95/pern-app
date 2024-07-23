@@ -48,28 +48,31 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Copy docker-compose.yml to server
+      
+      -name: Set up SSH
         run: |
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
-          scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.USER }}:/u
+
+      # - name: Copy docker-compose.yml to server
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+      #     chmod 600 ~/.ssh/id_rsa
+      #     eval $(ssh-agent -s)
+      #     ssh-add ~/.ssh/id_rsa
+      #     scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.USER }}:/u
 
       - name: Pull production images and deploy
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          eval $(ssh-agent -s)
-          ssh-add ~/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }} "
             cd /u
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.TOKEN_CD }}
-            docker pull
-            docker-compose up -d
+            # docker pull
+            # docker-compose up -d
           "
 
         env:

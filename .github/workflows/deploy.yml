@@ -51,6 +51,7 @@ jobs:
       
       - name: Set up SSH
         env:
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
@@ -58,7 +59,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SERVER }} >> ~/.ssh/known_hosts
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
 
       # - name: Copy docker-compose.yml to server
       #   run: |
@@ -80,7 +81,6 @@ jobs:
 
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
           DOCKERFILE_API: Docker.production.Dockerfile
           DOCKERFILE_CLIENT: Docker.production.Dockerfile
           IMAGE_API: ghcr.io/${{ github.repository }}:api_latest

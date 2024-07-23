@@ -65,15 +65,15 @@ jobs:
         run: |
           echo "API_IMAGE=ghcr.io/${{ github.repository }}:api_latest" > .env
           echo "CLIENT_IMAGE=ghcr.io/${{ github.repository }}:client_latest" >> .env
-          scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.USER }}:/u
+          scp -o StrictHostKeyChecking=no docker-compose.yml .env ${{ secrets.USER }}:/u
 
       - name: Pull production images and deploy
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }} "
             cd /u
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.TOKEN_CD }}
-            docker pull
-            # docker-compose up -d
+            docker compose pull
+            docker compose up -d
           "
 
         env:

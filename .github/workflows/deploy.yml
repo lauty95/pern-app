@@ -33,9 +33,9 @@ jobs:
           export DOCKERFILE_CLIENT=Docker/production/Dockerfile
           export NODE_ENV=production
           docker-compose build
-          docker tag pern_app_api ghcr.io/${{ github.repository }}:api_latest
+          docker tag pern_app:api_latest ghcr.io/${{ github.repository }}:api_latest
           docker push ghcr.io/${{ github.repository }}:api_latest
-          docker tag pern_app_client ghcr.io/${{ github.repository }}:client_latest
+          docker tag pern_app:client_latest ghcr.io/${{ github.repository }}:client_latest
           docker push ghcr.io/${{ github.repository }}:client_latest
 
 

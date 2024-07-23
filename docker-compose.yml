@@ -4,22 +4,23 @@ services:
     ports:
       - '5432:5432'
     environment:
-      NODE_ENV: ${NODE_ENV:-production}
+      NODE_ENV: ${NODE_ENV:-development}
       POSTGRES_DB: todo_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - ${DATA_VOLUME_PATH:-./data/db}:/var/lib/postgresql/data
+
 
   api:
     image: ${API_IMAGE:-pern_app:api_latest}
     build:
       context: ./api
-      dockerfile: ${DOCKERFILE_API:-Docker/production/Dockerfile}
+      dockerfile: ${DOCKERFILE_API:-Docker/development/Dockerfile}
     ports:
       - '3001:3001'
     environment:
-      NODE_ENV: ${NODE_ENV:-production}
+      NODE_ENV: ${NODE_ENV:-development}
       DB_HOST: db
       DB_DBNAME: todo_db
       DB_USERNAME: postgres
@@ -31,12 +32,12 @@ services:
     image: ${CLIENT_IMAGE:-pern_app:client_latest}
     build:
       context: ./client
-      dockerfile: ${DOCKERFILE_CLIENT:-Docker/production/Dockerfile}
+      dockerfile: ${DOCKERFILE_CLIENT:-Docker/development/Dockerfile}
     ports:
       - '5173:5173'
     environment:
-      VITE_REACT_APP_BACK: http://167.99.225.40:3001
-      NODE_ENV: ${NODE_ENV:-production}
+      VITE_REACT_APP_BACK: ${APP_BACK:-http://localhost:3001}
+      NODE_ENV: ${NODE_ENV:-development}
     depends_on:
       - api
 

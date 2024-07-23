@@ -34,6 +34,8 @@ jobs:
           export NODE_ENV=production
           export API_IMAGE=docker.io/library/pern_app:api_latest
           export CLIENT_IMAGE=docker.io/library/pern_app:client_latest
+          export APP_BACK=http://167.99.225.40:3001
+          export DATA_VOLUME_PATH=/usr/lau-test/shared
           docker-compose build
           docker tag pern_app:api_latest ghcr.io/${{ github.repository }}:api_latest
           docker push ghcr.io/${{ github.repository }}:api_latest

@@ -4,7 +4,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const taskRoutes = require('./routes/taskRoutes');
 const dotenv = require('dotenv');
-const db = require('./models');  // Asegúrate de que la ruta sea correcta
+const db = require('./models');
 
 dotenv.config();
 const app = express();
@@ -17,7 +17,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/', taskRoutes);
 
-// Sincroniza los modelos con la base de datos
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

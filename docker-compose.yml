@@ -30,7 +30,7 @@ services:
     ports:
       - '5173:5173'
     environment:
-      REACT_APP_BACK: http://167.99.225.40:3001
+      VITE_REACT_APP_BACK: http://167.99.225.40:3001
       NODE_ENV: ${NODE_ENV:-production}
     depends_on:
       - api

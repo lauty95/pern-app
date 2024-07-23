@@ -53,8 +53,6 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          echo "Entrando e imprimiendo private key"
-          echo "$SSH_PRIVATE_KEY"
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
@@ -81,6 +79,8 @@ jobs:
           "
 
         env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
           DOCKERFILE_API: Docker.production.Dockerfile
           DOCKERFILE_CLIENT: Docker.production.Dockerfile
           IMAGE_API: ghcr.io/${{ github.repository }}:api_latest

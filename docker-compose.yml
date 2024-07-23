@@ -14,7 +14,7 @@ services:
     ports:
       - '3001:3001'
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
+      NODE_ENV: ${NODE_ENV:-production}
       DB_HOST: db
       DB_DBNAME: todo_db
       DB_USERNAME: postgres
@@ -30,6 +30,7 @@ services:
     ports:
       - '5173:5173'
     environment:
+      REACT_APP_BACK: http://167.99.225.40:3001
       NODE_ENV: ${NODE_ENV:-production}
     depends_on:
       - api

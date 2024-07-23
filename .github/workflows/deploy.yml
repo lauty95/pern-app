@@ -61,8 +61,10 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
 
-      - name: Copy docker-compose.yml to server
+      - name: Copy docker-compose.yml & .env to server
         run: |
+          echo "API_IMAGE=ghcr.io/${{ github.repository }}:api_latest" > .env
+          echo "CLIENT_IMAGE=ghcr.io/${{ github.repository }}:client_latest" >> .env
           scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.USER }}:/u
 
       - name: Pull production images and deploy
@@ -70,7 +72,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }} "
             cd /u
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.TOKEN_CD }}
-            # docker pull
+            docker pull
             # docker-compose up -d
           "
 

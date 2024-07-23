@@ -7,7 +7,7 @@ services:
       - db-data:/var/lib/postgresql/data
 
   api:
-    image: ${API_IMAGE:-pern_app:api_latest}
+    image: ${API_IMAGE:-pern_app_api:api_latest}
     build:
       context: ./api
       dockerfile: ${DOCKERFILE_API:-Docker/production/Dockerfile}
@@ -23,7 +23,7 @@ services:
       - db
 
   client:
-    image: ${CLIENT_IMAGE:-pern_app:client_latest}
+    image: ${CLIENT_IMAGE:-pern_app_client:client_latest}
     build:
       context: ./client
       dockerfile: ${DOCKERFILE_CLIENT:-Docker/production/Dockerfile}

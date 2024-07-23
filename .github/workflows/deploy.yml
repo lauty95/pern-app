@@ -51,12 +51,14 @@ jobs:
       
       - name: Set up SSH
         run: |
+          echo "$SSH_PRIVATE_KEY"
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
-
+          ssh-keyscan -H ${{ secrets.SERVER }} >> ~/.ssh/known_hosts
+          
       # - name: Copy docker-compose.yml to server
       #   run: |
       #     mkdir -p ~/.ssh

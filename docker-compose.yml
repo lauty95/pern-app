@@ -10,6 +10,12 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - ${DATA_VOLUME_PATH:-./data/db}:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
 
 
   api:
@@ -26,7 +32,8 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: password
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   client:
     image: ${CLIENT_IMAGE:-pern_app:client_latest}

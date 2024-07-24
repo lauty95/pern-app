@@ -66,7 +66,7 @@ jobs:
           echo "API_IMAGE=ghcr.io/${{ github.repository }}:api_latest" > .env
           echo "CLIENT_IMAGE=ghcr.io/${{ github.repository }}:client_latest" >> .env
           echo "APP_BACK=http://167.99.225.40:3001" >> .env
-          echo "DATA_VOLUME_PATH=/usr/lau-test/shared" >> .env
+          echo "DATA_VOLUME_PATH=/u/data/" >> .env
           scp -o StrictHostKeyChecking=no docker-compose.yml .env ${{ secrets.USER }}:/u
 
       - name: Pull production images and deploy
